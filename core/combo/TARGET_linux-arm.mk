@@ -92,7 +92,6 @@ endif
 android_config_h := $(call select-android-config-h,linux-arm)
 
 $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += \
-                        -pipe \
 			-msoft-float \
 			-ffunction-sections \
 			-fdata-sections \
@@ -191,7 +190,8 @@ define $(combo_2nd_arch_prefix)transform-o-to-shared-lib-inner
 $(hide) $(PRIVATE_CXX) \
 	-nostdlib -Wl,-soname,$(notdir $@) \
 	-Wl,--gc-sections \
-	$(if $(filter true,$(PRIVATE_CLANG)),-shared,-Wl,-shared) \
+	-Wl,-shared,-Bsymbolic \
+	-shared \
 	$(PRIVATE_TARGET_GLOBAL_LD_DIRS) \
 	$(if $(filter true,$(PRIVATE_NO_CRT)),,$(PRIVATE_TARGET_CRTBEGIN_SO_O)) \
 	$(PRIVATE_ALL_OBJECTS) \
@@ -212,8 +212,14 @@ $(hide) $(PRIVATE_CXX) \
 	$(PRIVATE_LDLIBS)
 endef
 
+ifeq ($(TARGET_DISABLE_ARM_PIE),true)
+   PIE_EXECUTABLE_TRANSFORM := -Wl,-T,$(BUILD_SYSTEM)/armelf.x
+else
+   PIE_EXECUTABLE_TRANSFORM := -pie
+endif
+
 define $(combo_2nd_arch_prefix)transform-o-to-executable-inner
-$(hide) $(PRIVATE_CXX) -nostdlib -Bdynamic -pie \
+$(hide) $(PRIVATE_CXX) -nostdlib -Bdynamic $(PIE_EXECUTABLE_TRANSFORM) \
 	-Wl,-dynamic-linker,/system/bin/linker \
 	-Wl,--gc-sections \
 	-Wl,-z,nocopyreloc \
