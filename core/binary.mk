@@ -97,7 +97,7 @@ else
   endif
 endif
 
-# Copyright (C) 2014 The SaberMod Project
+# Copyright (C) 2015 The SaberMod Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -112,14 +112,6 @@ endif
 # limitations under the License.
 #
 # Include custom gcc flags.  Seperate them so they can be easily managed.
-ifeq ($(GRAPHITE_OPTS),true)
-ifndef LOCAL_IS_HOST_MODULE
-ifeq ($(LOCAL_CLANG),)
-include $(BUILD_SYSTEM)/graphite.mk
-endif
-endif
-endif
-
 ifeq ($(STRICT_ALIASING),true)
 include $(BUILD_SYSTEM)/strict.mk
 endif
@@ -142,6 +134,14 @@ ifeq ($(ENABLE_GCCONLY),true)
 ifndef LOCAL_IS_HOST_MODULE
 ifeq ($(LOCAL_CLANG),)
 include $(BUILD_SYSTEM)/gcconly.mk
+endif
+endif
+endif
+
+ifeq ($(GRAPHITE_OPTS),true)
+ifndef LOCAL_IS_HOST_MODULE
+ifeq ($(LOCAL_CLANG),)
+include $(BUILD_SYSTEM)/graphite.mk
 endif
 endif
 endif
@@ -376,6 +376,7 @@ ifneq ($(LOCAL_NO_SYNTAX_CHECK),true)
 endif
 endif
 $(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_CXX := $(my_cxx)
+$(LOCAL_INTERMEDIATE_TARGETS): PRIVATE_CLANG := $(my_clang)
 
 # TODO: support a mix of standard extensions so that this isn't necessary
 LOCAL_CPP_EXTENSION := $(strip $(LOCAL_CPP_EXTENSION))
@@ -863,11 +864,6 @@ normal_objects := \
     $(addprefix $(TOPDIR)$(LOCAL_PATH)/,$(LOCAL_PREBUILT_OBJ_FILES))
 
 all_objects := $(normal_objects) $(gen_o_objects)
-
-## Allow a device's own headers to take precedence over global ones
-ifneq ($(TARGET_SPECIFIC_HEADER_PATH),)
-my_c_includes := $(TOPDIR)$(TARGET_SPECIFIC_HEADER_PATH) $(my_c_includes)
-endif
 
 my_c_includes += $(TOPDIR)$(LOCAL_PATH) $(intermediates) $(generated_sources_dir)
 

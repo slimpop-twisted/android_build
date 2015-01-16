@@ -1,4 +1,4 @@
-# Copyright (C) 2014 The SaberMod Project
+# Copyright (C) 2015 The SaberMod Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,7 +42,10 @@ LOCAL_CONLYFLAGS += -O2 \
 	-ftree-slp-vectorize \
 	-fvect-cost-model \
 	-ftree-partial-pre \
-	-fipa-cp-clone
+	-fipa-cp-clone \
+	-Wno-unused-parameter \
+	-Wno-unused-but-set-variable \
+	-Wno-maybe-uninitialized
 else
 LOCAL_CONLYFLAGS := -O2 \
 	-finline-functions \
@@ -53,12 +56,14 @@ LOCAL_CONLYFLAGS := -O2 \
 	-ftree-slp-vectorize \
 	-fvect-cost-model \
 	-ftree-partial-pre \
-	-fipa-cp-clone
+	-fipa-cp-clone \
+	-Wno-unused-parameter \
+	-Wno-unused-but-set-variable \
+	-Wno-maybe-uninitialized
 endif
 
 ifdef LOCAL_CPPFLAGS
 LOCAL_CPPFLAGS += -O2 \
-	-fstrict-aliasing \
 	-finline-functions \
 	-funswitch-loops \
 	-fpredictive-commoning \
@@ -67,7 +72,10 @@ LOCAL_CPPFLAGS += -O2 \
 	-ftree-slp-vectorize \
 	-fvect-cost-model \
 	-ftree-partial-pre \
-	-fipa-cp-clone
+	-fipa-cp-clone \
+	-Wno-unused-parameter \
+	-Wno-unused-but-set-variable \
+	-Wno-maybe-uninitialized
 else
 LOCAL_CPPFLAGS := -O2 \
 	-finline-functions \
@@ -78,7 +86,10 @@ LOCAL_CPPFLAGS := -O2 \
 	-ftree-slp-vectorize \
 	-fvect-cost-model \
 	-ftree-partial-pre \
-	-fipa-cp-clone
+	-fipa-cp-clone \
+	-Wno-unused-parameter \
+	-Wno-unused-but-set-variable \
+	-Wno-maybe-uninitialized
 endif
 endif
 #####
